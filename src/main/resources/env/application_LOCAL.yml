@@ -1,0 +1,64 @@
+#Información de la versión y del artefacto
+eurekaHostNameN1: localhost
+#Habrá tantas variables Hostname como zonas en las que se replique eureka
+project:
+  artifactId: @project.artifactId@
+  name: @project.name@
+  version: @project.version@
+  description: @project.description@
+info:
+  build:
+    artifactId: ${project.artifactId}
+    name: ${project.name}
+    version: ${project.version}
+    description: ${project.description}
+#Puerto donde se levanta eureka
+server:
+  port: 9002
+spring:
+  application:
+     name: ${project.name}
+ 
+endpoints:
+  actuator:
+    enabled: true
+  restart:
+    enabled: true
+   
+eureka:
+  instance:
+    instanceId: ${eurekaHostNameN1}:${spring.application.name}:${server.port}
+    hostName: ${eurekaHostNameN1}
+    metadataMap: 
+      version: ${spring.serviceVersion}
+    leaseRenewalIntervalInSeconds: 5
+    lease-expiration-duration-in-seconds: 5
+  client:
+    use-dns-for-fetching-service-urls: false
+#Zonas disponibles
+    availability-zones:
+      eurekaN1: 'eurekaN1'
+    registerWithEureka: false
+    fetchRegistry: true
+  
+#URLs de la zonas
+    serviceUrl:
+      'eurekaN1': http://${eurekaHostNameN1}:9002/eureka/
+      defaultZone: http://${eurekaHostNameN1}:9002/eureka/
+  server:
+    enable-self-preservation: true
+    wait-time-in-ms-when-sync-empty: 0
+logging:
+  
+#Situación de los logs
+#  path: /servicios/springboot/logs/eureka/${project.name}
+  
+#Situación del archivo de logback para la configuración de la consola de administración
+#  config: /servicios/springboot/eureka/${project.name}/logback.xml
+#  file: ${logging.path}/logging-${info.build.name}.log
+  level:
+    ROOT: INFO
+    org:
+      springframework:
+        web: INFO
+      hibernate: INFO
